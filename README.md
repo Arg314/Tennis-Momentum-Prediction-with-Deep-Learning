@@ -53,56 +53,63 @@ tennis-momentum/
 - 原始数据：13,050 场比赛  
 - 清洗后有效数据：13,050 场比赛（无缺失，全部保留）
 
-字段说明（清洗后 Parquet 文件）
-字段名   类型   说明
-match_id   str   比赛唯一标识符
+字段说明
+| 字段名 | 类型 | 说明 |
+|--------|------|------|
+| `match_id` | `str` | 比赛唯一标识符 |
+| `server1`, `server2` | `str` | 两位球员姓名 |
+| `parsed_points` | `list[str]` | 点序列（如 `['S', 'R', 'D', ...]`） |
+| `n_points` | `int` | 本场比赛总分数 |
+| `momentum_labels` | `list[int]` | 动量标签（0/1），1 表示发生动量转移 |
 
-server1, server2   str   两位球员姓名
-
-parsed_points   list[str]   点序列（如 ['S', 'R', 'D', ...]）
-
-n_points   int   本场比赛总分数
-
-momentum_labels   list[int]   动量标签（0/1，1 表示发生动量转移）
 
 模型架构
 
 本项目实现了以下 5 种神经网络模型：
-模型名称   结构特点   输出
-TennisRNN   2 层 RNN + 标量特征融合   单步动量概率
+| 模型名称 | 结构特点 | 输出 |
+| :--- | :--- | :--- |
+| TennisRNN | 2 层 RNN + 标量特征融合 | 单步动量概率 |
+| TennisLSTM | 2 层 LSTM + 标量特征融合 | 单步动量概率 |
+| TennisGRU | 2 层 GRU + 标量特征融合 | 单步动量概率 |
+| TennisTransformer | Transformer 编码器（d_model=32, nhead=2） | 单步动量概率 |
+| MultiStepLSTM | LSTM + 多步预测头（horizon=3） | 未来 3 步动量概率 |
 
-TennisLSTM   2 层 LSTM + 标量特征融合   单步动量概率
-
-TennisGRU   2 层 GRU + 标量特征融合   单步动量概率
-
-TennisTransformer   Transformer 编码器（d_model=32, nhead=2）   单步动量概率
-
-MultiStepLSTM   LSTM + 多步预测头（horizon=3）   未来 3 步动量概率
 
 所有模型均将序列特征（历史得分序列）与标量特征（如当前局分、发球优势等）进行融合，提升预测能力。
 
 ## 快速开始
 
 1. 安装依赖
+```
 pip install -r requirements.txt
+```
 
 2. 单模型训练与评估（演示模式，仅用前 300 场）
+```
 python main.py --model LSTM
+```
 
 3. 批量训练多个模型（使用全部 13,050 场比赛）
+```
 python main.py --models RNN LSTM GRU Transformer --use_full_data
+```
 
 4. 从 Hugging Face 加载数据集
+```
 from datasets import load_dataset
-
+```
 自动下载并加载
+```
 dataset = load_dataset("your-username/atp-momentum-prediction")
 df = dataset["train"].to_pandas()
 
 print(df.head())
+```
 
-5. 启动可视化仪表盘（可选）
+5. 启动可视化仪表盘
+```
 streamlit run app/dashboard.py
+```
 
 评估指标
 
