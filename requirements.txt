@@ -1,0 +1,25 @@
+# 核心科学计算与数据处理
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+
+# 深度学习框架
+torch>=2.0.0
+torchvision>=0.15.0  
+
+# Hugging Face 生态
+datasets>=2.14.0
+huggingface-hub>=0.16.0
+
+# 特征工程与序列处理
+tqdm>=4.65.0          # 进度条
+PyYAML>=6.0           # 加载 config.yaml
+
+# 可视化
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Web 仪表盘
+streamlit>=1.28.0
+
+# 注：未包含 jupyter，如需 notebook 分析可自行添加
