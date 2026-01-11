@@ -184,7 +184,7 @@ st.sidebar.subheader("模型选择")
 selected_models = st.sidebar.multiselect(
     "选择要评估的模型",
     ["RNN", "LSTM", "GRU", "Transformer"],
-    default=["LSTM", "GRU", "Transformer"]
+    default=["LSTM", "GRU", "Transformer","RNN"]
 )
 
 sample_matches = st.sidebar.slider("用于评估的比赛数量", 10, 100, 50)
@@ -303,17 +303,27 @@ else:
                 # 添加默认选择
                 default_model = available_models[0]
                 
+                if "selected_model_for_plot" not in st.session_state:
+                    st.session_state.selected_model_for_plot = default_model
+                
+                selected_model_for_plot = st.session_state.selected_model_for_plot
+
                 # 模型选择按钮
                 for i, model_name in enumerate(available_models):
                     with cols[i]:
+                        is_primary = (model_name == selected_model_for_plot)
+        
                         if st.button(f"📈 {model_name}", 
-                                   use_container_width=True,
-                                   type="primary" if model_name == default_model else "secondary"):
+                                use_container_width=True,
+                                type="primary" if is_primary else "secondary",
+                                key=f"model_btn_{model_name}"):  # 添加唯一key避免重复
+                            st.session_state.selected_model_for_plot = model_name
+                            # 更新当前变量
                             selected_model_for_plot = model_name
+                            # 如果希望在点击后立即刷新，可以添加：
+                            st.rerun()
                 
-                # 如果还没有选择，使用默认
-                if selected_model_for_plot is None:
-                    selected_model_for_plot = default_model
+                selected_model_for_plot = st.session_state.selected_model_for_plot
                 
                 # 或者使用下拉选择
                 selected_model_for_plot = st.selectbox(
