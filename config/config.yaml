@@ -1,0 +1,30 @@
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  archive_file: "pbp_matches_atp_main_archive.csv"
+  current_file: "pbp_matches_atp_main_current.csv"
+  min_points: 20
+
+feature:
+  window_size: 10
+  horizon: 1        # 设为 3 可启用多步预测
+  use_momentum: true
+
+model:
+  type: "LSTM"      # ["LSTM", "GRU", "Transformer", "MultiStepLSTM"]
+  hidden_size: 64
+  num_layers: 2
+  d_model: 32       # for Transformer
+  nhead: 2
+
+train:
+  epochs: 25
+  batch_size: 128
+  lr: 0.001
+  test_size: 0.2
+  random_state: 42
+  device: "cpu"    # "cpu", "cuda", or "auto"
+
+dashboard:
+  sample_matches: 20
+  momentum_window: 5
