@@ -9,7 +9,7 @@
 清洗后的数据集已公开托管在 Hugging Face Datasets Hub，便于复现与社区共享。
 
 - Hugging Face 数据集地址：  
-your-username/atp-momentum-prediction
+https://huggingface.co/datasets/Arg314/tennis_momentum_dataset
 
 
 ## 项目结构
@@ -100,7 +100,7 @@ from datasets import load_dataset
 ```
 自动下载并加载
 ```
-dataset = load_dataset("your-username/atp-momentum-prediction")
+dataset = load_dataset("Arg314/tennis_momentum_dataset")
 df = dataset["train"].to_pandas()
 
 print(df.head())
